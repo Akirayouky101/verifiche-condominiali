@@ -1066,47 +1066,12 @@ export default function PannelloAdmin() {
           </div>
         )}
 
-        {/* Paginazione */}
-        {totalePagine > 1 && (
-          <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600">
-                Pagina <strong>{paginaCorrente}</strong> di <strong>{totalePagine}</strong>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setPaginaCorrente(p => Math.max(1, p - 1))}
-                  disabled={paginaCorrente === 1}
-                  className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  ← Precedente
-                </button>
-                <div className="flex gap-1">
-                  {Array.from({ length: totalePagine }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => setPaginaCorrente(page)}
-                      className={`w-8 h-8 rounded-md ${
-                        page === paginaCorrente
-                          ? 'bg-blue-600 text-white'
-                          : 'border border-gray-300 hover:bg-gray-100'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setPaginaCorrente(p => Math.min(totalePagine, p + 1))}
-                  disabled={paginaCorrente === totalePagine}
-                  className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Successiva →
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Paginazione - Componente modulare */}
+        <Paginazione
+          paginaCorrente={paginaCorrente}
+          totalePagine={totalePagine}
+          onPaginaChange={setPaginaCorrente}
+        />
       </div>
 
       {/* Modal per azioni */}
