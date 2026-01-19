@@ -13,37 +13,11 @@ import ImpostazioniUtente from '@/components/user/ImpostazioniUtente'
 import Dashboard from '@/components/Dashboard'
 import NotificationCenter from '@/components/notifications/NotificationCenterSimple'
 import Guida from '@/components/Guida'
-import VideoIntro from '@/components/intro/VideoIntro'
 import Link from 'next/link'
 
 function MainApp() {
   const { isAuthenticated, user, role, logout } = useAuth()
   const [activeSection, setActiveSection] = useState(role === 'admin' ? 'dashboard' : 'lavorazioni')
-  const [showVideoIntro, setShowVideoIntro] = useState(false)
-  const [introChecked, setIntroChecked] = useState(false)
-
-  // Gestisce l'intro video SOLO dopo login riuscito
-  useEffect(() => {
-    // Solo se autenticato E non abbiamo ancora controllato
-    if (isAuthenticated && !introChecked) {
-      // Controlla se l'utente ha già visto l'intro (localStorage)
-      const hasSeenIntroStored = localStorage.getItem('hasSeenVideoIntro')
-      
-      if (!hasSeenIntroStored) {
-        // Non ha mai visto l'intro -> mostralo
-        setShowVideoIntro(true)
-      }
-      
-      // Marca che abbiamo controllato (per evitare loop)
-      setIntroChecked(true)
-    }
-  }, [isAuthenticated, introChecked])
-
-  // Funzione chiamata quando l'intro è completato
-  const handleIntroComplete = () => {
-    localStorage.setItem('hasSeenVideoIntro', 'true')
-    setShowVideoIntro(false)
-  }
 
   // Sezioni diverse in base al ruolo
   const adminSections = [
@@ -167,11 +141,6 @@ function MainApp() {
           )}
         </div>
       </main>
-
-      {/* Video Intro Modal - SOLO se autenticato */}
-      {isAuthenticated && showVideoIntro && (
-        <VideoIntro onComplete={handleIntroComplete} />
-      )}
     </div>
   )
 }
