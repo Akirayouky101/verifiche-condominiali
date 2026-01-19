@@ -10,6 +10,11 @@ import WizardLavorazioni from './WizardLavorazioni'
 import { PDFGenerator, LavorazionePDF } from '@/lib/pdfGenerator'
 import { refreshStatsAfterDelay } from '@/lib/refreshStats'
 import { NotificationManager } from '@/lib/notifications'
+// Componenti modulari per lavorazioni
+import { LavorazioneStats } from './lavorazioni/LavorazioneStats'
+import { LavorazioneFiltri } from './lavorazioni/LavorazioneFiltri'
+import { LavorazioneCard } from './lavorazioni/LavorazioneCard'
+import { Paginazione } from './lavorazioni/Paginazione'
 
 // Hook per evitare hydration errors
 function useIsClient() {
@@ -814,143 +819,41 @@ export default function PannelloAdmin() {
       {activeTab === 'lavorazioni' && (
         <div className="space-y-6">
 
-      {/* Statistiche */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-blue-600">{stats.totali}</div>
-              <div className="text-blue-800 text-sm">Totali</div>
-            </div>
-            <div className="text-blue-400 text-2xl">📊</div>
-          </div>
-        </div>
-        
-        <div className="bg-yellow-50 p-4 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-yellow-600">{stats.da_eseguire}</div>
-              <div className="text-yellow-800 text-sm">Da Eseguire</div>
-            </div>
-            <div className="text-yellow-400 text-2xl">⏳</div>
-          </div>
-        </div>
-        
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-blue-600">{stats.in_corso}</div>
-              <div className="text-blue-800 text-sm">In Corso</div>
-            </div>
-            <div className="text-blue-400 text-2xl">🔄</div>
-          </div>
-        </div>
+      {/* Statistiche - Componente modulare */}
+      <LavorazioneStats stats={stats} />
 
-        <div className="bg-green-50 p-4 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-green-600">{stats.completata}</div>
-              <div className="text-green-800 text-sm">Completate</div>
-            </div>
-            <div className="text-green-400 text-2xl">✅</div>
-          </div>
-        </div>
-        
-        <div className="bg-orange-50 p-4 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-orange-600">{stats.riaperte}</div>
-              <div className="text-orange-800 text-sm">Riaperte</div>
-            </div>
-            <div className="text-orange-400 text-2xl">🔄</div>
-          </div>
-        </div>
-      </div>
+      {/* Filtri - Componente modulare */}
+      <LavorazioneFiltri
+        ricerca={ricercaCondominio}
+        tipoSelezionato={filtroTipo}
+        statoSelezionato={filtroStato}
+        onRicercaChange={setRicercaCondominio}
+        onTipoChange={setFiltroTipo}
+        onStatoChange={setFiltroStato}
+        onReload={caricaLavorazioni}
+      />
 
-      {/* Filtri */}
-      <div className="bg-white rounded-lg shadow p-4 space-y-4">
-        <div className="flex flex-wrap gap-4 items-end">
-          {/* Ricerca per condominio */}
-          <div className="flex-1 min-w-[250px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              🔍 Cerca condominio
-            </label>
-            <input
-              type="text"
-              value={ricercaCondominio}
-              onChange={(e) => setRicercaCondominio(e.target.value)}
-              placeholder="Nome o indirizzo..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          {/* Filtro per tipo */}
-          <div className="min-w-[180px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tipo
-            </label>
-            <select
-              value={filtroTipo}
-              onChange={(e) => setFiltroTipo(e.target.value)}
-              title="Filtra per tipo di lavorazione"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="tutte">Tutte</option>
-              <option value="lavorazioni">Solo Lavorazioni</option>
-              <option value="integrazioni">Solo Integrazioni</option>
-            </select>
-          </div>
-
-          {/* Filtro per stato */}
-          <div className="min-w-[180px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Stato
-            </label>
-            <select
-              value={filtroStato}
-              onChange={(e) => setFiltroStato(e.target.value)}
-              title="Filtra per stato lavorazione"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="tutte">Tutte</option>
-              <option value="assegnata">Assegnate</option>
-              <option value="in_corso">In Corso</option>
-              <option value="completata">Completate</option>
-              <option value="riaperta">Riaperte</option>
-            </select>
-          </div>
-
-          <button
-            onClick={caricaLavorazioni}
-            className="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
-          >
-            <span>🔄</span>
-            Ricarica
-          </button>
-        </div>
-
-        {/* Info risultati */}
-        <div className="flex items-center justify-between text-sm text-gray-600 pt-2 border-t">
-          <div>
-            Visualizzati <strong>{lavorazioniPaginate.length}</strong> di{' '}
-            <strong>{lavorazioniFiltrate.length}</strong> risultati
-            {lavorazioni.length !== lavorazioniFiltrate.length && (
-              <span className="text-blue-600"> (filtrate da {lavorazioni.length} totali)</span>
-            )}
-          </div>
-          {(ricercaCondominio || filtroStato !== 'tutte' || filtroTipo !== 'tutte') && (
-            <button
-              onClick={() => {
-                setRicercaCondominio('')
-                setFiltroStato('tutte')
-                setFiltroTipo('tutte')
-              }}
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              Cancella filtri
-            </button>
+      {/* Info risultati e reset filtri */}
+      <div className="flex items-center justify-between text-sm text-gray-600 bg-white p-4 rounded-lg shadow">
+        <div>
+          Visualizzati <strong>{lavorazioniPaginate.length}</strong> di{' '}
+          <strong>{lavorazioniFiltrate.length}</strong> risultati
+          {lavorazioni.length !== lavorazioniFiltrate.length && (
+            <span className="text-blue-600"> (filtrate da {lavorazioni.length} totali)</span>
           )}
         </div>
+        {(ricercaCondominio || filtroStato !== 'tutte' || filtroTipo !== 'tutte') && (
+          <button
+            onClick={() => {
+              setRicercaCondominio('')
+              setFiltroStato('tutte')
+              setFiltroTipo('tutte')
+            }}
+            className="text-blue-600 hover:text-blue-700 font-medium"
+          >
+            Cancella filtri
+          </button>
+        )}
       </div>
 
       {/* Pulsante Nuova Lavorazione */}
