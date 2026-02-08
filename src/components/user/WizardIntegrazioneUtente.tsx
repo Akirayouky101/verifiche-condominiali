@@ -245,7 +245,7 @@ export default function WizardIntegrazioneUtente({
           {/* Motivo integrazione */}
           {lavorazione.motivo_integrazione && (
             <div className="mt-4 bg-blue-600 bg-opacity-30 border border-blue-300 rounded-lg p-3">
-              <p className="text-sm font-semibold">📝 Motivo dell'integrazione:</p>
+              <p className="text-sm font-semibold">📝 Motivo dell&apos;integrazione:</p>
               <p className="text-sm mt-1 text-blue-50">{lavorazione.motivo_integrazione}</p>
             </div>
           )}
@@ -271,7 +271,7 @@ export default function WizardIntegrazioneUtente({
                   Campi da Compilare
                 </h3>
                 <p className="text-gray-600 text-sm mb-4">
-                  Compila tutti i campi richiesti dall'amministratore
+                  Compila tutti i campi richiesti dall&apos;amministratore
                 </p>
               </div>
 
