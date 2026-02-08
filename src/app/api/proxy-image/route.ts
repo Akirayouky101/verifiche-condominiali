@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Force dynamic rendering - this API uses request.url
+export const dynamic = 'force-dynamic'
+
 /**
  * API Proxy per scaricare immagini lato server
  * Risolve problemi CORS per:
