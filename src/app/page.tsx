@@ -31,6 +31,8 @@ function MainApp() {
 
   const userSections = [
     { id: 'lavorazioni', name: 'Le Mie Lavorazioni', icon: '📋' },
+    { id: 'verifiche', name: 'Nuova Verifica', icon: '✅' },
+    { id: 'tipologie', name: 'Tipologie', icon: '📑' },
     { id: 'note', name: 'Note Personali', icon: '📝' },
     { id: 'impostazioni', name: 'Impostazioni', icon: '⚙️' },
   ]
@@ -135,6 +137,8 @@ function MainApp() {
           {role === 'sopralluoghista' && (
             <>
               {activeSection === 'lavorazioni' && <PannelloUtente />}
+              {activeSection === 'verifiche' && <WizardVerifiche />}
+              {activeSection === 'tipologie' && <GestioneTipologie />}
               {activeSection === 'note' && <NotePersonali />}
               {activeSection === 'impostazioni' && <ImpostazioniUtente />}
             </>
